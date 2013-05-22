@@ -73,14 +73,10 @@ function Config(parent) {
     settings: {
       get: function () {
         var s = {};
-        Object.keys(settings).forEach(function (setting) {
+        var allSettings = Object.keys(settings).concat(parent ? parent.settings : []);
+        allSettings.forEach(function (setting) {
           s[setting] = 1;
         });
-        if (parent) {
-          parent.settings.forEach(function (setting) {
-            s[setting] = 1;
-          });
-        }
         return Object.keys(s);
       }
     }
