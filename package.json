@@ -1,5 +1,5 @@
 {
-  "name": "azure-config",
+  "name": "cct-node-config-exp",
   "version": "0.0.1",
   "description": "a module to encapsulate express-style programmatic configuration",
   "main": "index.js",
