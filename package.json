@@ -1,0 +1,14 @@
+{
+  "name": "azure-config",
+  "version": "0.0.1",
+  "description": "a module to encapsulate express-style programmatic configuration",
+  "main": "index.js",
+  "licenses": [ { "type": "Apache 2.0", "url": "http://www.apache.org/licenses/LICENSE-2.0" } ],
+  "devDependencies": {
+    "mocha": "~1.9.0",
+    "should": "~1.2.2"
+  },
+  "scripts": {
+    "test": "mocha -R spec"
+  }
+}
