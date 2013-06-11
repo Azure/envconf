@@ -16,17 +16,18 @@
 'use strict';
 
 var should = require('should');
+var sinon = require('sinon');
 
-var Config = require('../index');
+var envconf = require('../index');
 
 describe('Config', function () {
   it('should be creatable by new', function () {
-    var c = new Config();
+    var c = envconf.createConfig();
     should.exist(c);
   });
 
   it('should return a unique object for named environments', function () {
-    var c = new Config();
+    var c = envconf.createConfig();
     var dev = c('dev');
     var prod = c('prod');
 
@@ -37,12 +38,12 @@ describe('Config', function () {
   });
 
   it('should return itself if invoked without environment', function () {
-    var c = new Config();
+    var c = envconf.createConfig();
     c().should.equal(c);
   });
 
   it('should return same object for same environment', function () {
-    var c = new Config();
+    var c = envconf.createConfig();
     var d1 = c('dev');
     var d2 = c('dev');
 
@@ -50,7 +51,7 @@ describe('Config', function () {
   });
 
   it('should store settings by name', function () {
-    var c = new Config();
+    var c = envconf.createConfig();
     c.configure(function (c) {
       c.set('settingOne', 'aValue');
       c.set('secondSetting', 37);
@@ -61,7 +62,7 @@ describe('Config', function () {
   });
 
   it('should store settings in environments', function () {
-    var c = new Config();
+    var c = envconf.createConfig();
 
     c.configure('dev', function (c) {
       c.set('settingOne', 'devOne');
@@ -83,7 +84,7 @@ describe('Config', function () {
   });
 
   it('should set values in subenvironments', function () {
-    var c = new Config();
+    var c = envconf.createConfig();
 
     c.configure('dev', function (c) {
       c.configure('dev2', function (c) {
@@ -102,7 +103,7 @@ describe('Config', function () {
   });
 
   it('should look up parent configs to find setting', function () {
-    var c = new Config();
+    var c = envconf.createConfig();
 
     c.configure(function (c) {
       c.set('settingOne', 'defaultValue');
@@ -123,7 +124,7 @@ describe('Config and environment', function () {
 
   beforeEach(function () {
     originalEnv = process.env.NODE_ENV;
-    c = new Config();
+    c = envconf.createConfig();
     c.configure(function (c) {
       c.set('settingOne', 'fromRoot')
         .set('settingTwo', 'fromRoot')
@@ -140,6 +141,10 @@ describe('Config and environment', function () {
       c.set('settingTwo', 'fromProd');
       c.set('prodOnly', 'fromProd');
     });
+  });
+
+  afterEach(function () {
+    process.env.NODE_ENV = originalEnv;
   });
 
   it('should have default environment from NODE_ENV', function () {
@@ -192,5 +197,86 @@ describe('Config and environment', function () {
     expected.forEach(function (setting) {
       c('prod').settings.should.include(setting, 'expected setting ' + setting + ' but it was not found');
     });
+  });
+});
+
+describe('Config with custom environment var', function () {
+  var c;
+  var originalEnv;
+
+  beforeEach(function () {
+    originalEnv = process.env.CUSTOM_ENV_VAR;
+    c = envconf.createConfig({defaultEnvVar: 'CUSTOM_ENV_VAR'});
+
+    c.configure(function (c) {
+      c.set('settingOne', 'fromRoot')
+        .set('settingTwo', 'fromRoot')
+        .set('settingThree', 'fromRoot');
+    });
+
+    c.configure('dev', function (c) {
+      c.set('settingTwo', 'fromDev');
+      c.set('devOnly', 'fromDev');
+    });
+
+    c.configure('prod', function (c) {
+      c.set('settingOne', 'fromProd');
+      c.set('settingTwo', 'fromProd');
+      c.set('prodOnly', 'fromProd');
+    });
+  });
+
+  afterEach(function () {
+    process.env.CUSTOM_ENV_VAR = originalEnv;
+  });
+
+  it('should choose default from custom var', function () {
+    process.env.CUSTOM_ENV_VAR = 'prod';
+    c.default.get('settingOne').should.equal('fromProd');
+  });
+});
+
+describe('Config customization', function () {
+  var count;
+  function configCustomizer(config) {
+    config.customValue = ++count;
+  }
+
+  var spy;
+
+  beforeEach(function () {
+    count = 0;
+    spy = sinon.spy(configCustomizer);
+  });
+
+  it('should call customizer when creating config', function () {
+    var c = envconf.createConfig({ customizer: spy });
+    spy.callCount.should.equal(1);
+  });
+
+  it('should pass config to the customizer', function () {
+    var c = envconf.createConfig({ customizer: spy });
+    spy.calledWith(c).should.be.true;
+  });
+
+  it('should affect config when customized', function () {
+    var c = envconf.createConfig({ customizer: spy });
+    c.customValue.should.equal(1);
+  });
+
+  it('should call customizer for each environment', function () {
+    var c = envconf.createConfig({ customizer: spy });
+    c('dev');
+    c('prod');
+    spy.callCount.should.equal(3);
+  });
+
+  it('should call customizer once per environment', function () {
+    var c = envconf.createConfig({ customizer: spy });
+    c('dev');
+    c('dev');
+    c('dev');
+
+    spy.callCount.should.equal(2);
   });
 });

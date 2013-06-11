@@ -15,16 +15,20 @@
 
 'use strict';
 
-function Config(parent) {
+function Config(parent, defaultEnvVar, customizer) {
   var environments = { };
   var settings = { };
+
+  if (!defaultEnvVar) {
+    defaultEnvVar = 'NODE_ENV';
+  }
 
   function config(envName) {
     if (!envName) {
       return config;
     }
     if (!environments[envName]) {
-      environments[envName] = new Config(config);
+      environments[envName] = new Config(config, defaultEnvVar, customizer);
     }
     return environments[envName];
   }
@@ -59,7 +63,7 @@ function Config(parent) {
   Object.defineProperties(config, {
     default: {
       get: function () {
-        return config(process.env.NODE_ENV);
+        return config(process.env[defaultEnvVar]);
       },
       enumerable: true
     },
@@ -82,7 +86,18 @@ function Config(parent) {
     }
   });
 
+  if (customizer) {
+    customizer(config);
+  }
+
   return config;
 }
 
-module.exports = Config;
+function createConfig(options) {
+  var defaultEnvVar = (options && options.defaultEnvVar) || null;
+  var customizer = (options && options.customizer) || null;
+
+  return new Config(null, defaultEnvVar, customizer);
+}
+
+exports.createConfig = createConfig;
