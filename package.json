@@ -1,14 +1,31 @@
 {
-  "name": "cct-node-config-exp",
+  "name": "envconf",
+  "author": "Microsoft Corporation",
+  "contributors": [
+    "Tavares, Chris <ctavares@microsoft.com>"
+  ],
   "version": "0.0.1",
-  "description": "a module to encapsulate express-style programmatic configuration",
+  "description": "a module for express-style programmatic configuration",
   "main": "index.js",
+  "tags": ["config", "environment"],
+  "keywords": ["config", "configuration", "environment"],
   "licenses": [ { "type": "Apache 2.0", "url": "http://www.apache.org/licenses/LICENSE-2.0" } ],
   "devDependencies": {
     "mocha": "~1.9.0",
-    "should": "~1.2.2"
+    "should": "~1.2.2",
+    "jshint": "*"
+  },
+  "homepage": "https://github.com/christav/envconf",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:christav/envconf.git"
+  },
+  "bugs": {
+    "url": "http://github.com/christav/envconf/issues"
   },
   "scripts": {
-    "test": "mocha -R spec"
+    "test": "npm -s run-script jshint && npm -s run-script unit",
+    "unit": "mocha -R spec",
+    "jshint": "jshint index.js"
   }
 }
