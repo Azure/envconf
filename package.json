@@ -2,7 +2,10 @@
   "name": "envconf",
   "author": "Microsoft Corporation",
   "contributors": [
-    "Tavares, Chris <ctavares@microsoft.com>"
+    "Block, Glenn <gblock@microsoft.com>",
+    "Rodrigues, Andre <andrerod@microsoft.com>",
+    "Tavares, Chris <ctavares@microsoft.com>",
+
   ],
   "version": "0.0.1",
   "description": "a module for express-style programmatic configuration",
@@ -16,13 +19,13 @@
     "sinon": "*",
     "jshint": "*"
   },
-  "homepage": "https://github.com/christav/envconf",
+  "homepage": "https://github.com/WindowsAzure/envconf",
   "repository": {
     "type": "git",
-    "url": "git@github.com:christav/envconf.git"
+    "url": "git@github.com:WindowsAzure/envconf.git"
   },
   "bugs": {
-    "url": "http://github.com/christav/envconf/issues"
+    "url": "http://github.com/WindowsAzure/envconf/issues"
   },
   "scripts": {
     "test": "npm -s run-script jshint && npm -s run-script unit",
