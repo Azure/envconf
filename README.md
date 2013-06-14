@@ -56,19 +56,19 @@ with a config customizer:
 ```javascript
 
 function addConfigHelpers(config) {
-    config.useSql = function (host, db) {
-        config.set('sql host', host);
-        config.set('sql database name', db);
-    }
+  config.useSql = function (host, db) {
+    config.set('sql host', host);
+    config.set('sql database name', db);
+  }
 }
 
 var c3 = envconf.createConfig( { customizer: addConfigHelpers });
 
 c3.configure('test', function (c) {
-    c.useSql('testmachine', 'testdb');
+  c.useSql('testmachine', 'testdb');
 });
 
 c3.configure('production', function (c) {
-    c.useSql('realDatabase', 'actualDb');
+  c.useSql('realDatabase', 'actualDb');
 });
 ```
