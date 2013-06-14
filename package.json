@@ -4,12 +4,11 @@
   "contributors": [
     "Block, Glenn <gblock@microsoft.com>",
     "Rodrigues, Andre <andrerod@microsoft.com>",
-    "Tavares, Chris <ctavares@microsoft.com>",
-
+    "Tavares, Chris <ctavares@microsoft.com>"
   ],
   "version": "0.0.1",
   "description": "a module for express-style programmatic configuration",
-  "main": "index.js",
+  "main": "lib/index.js",
   "tags": ["config", "environment"],
   "keywords": ["config", "configuration", "environment"],
   "licenses": [ { "type": "Apache 2.0", "url": "http://www.apache.org/licenses/LICENSE-2.0" } ],
@@ -30,6 +29,6 @@
   "scripts": {
     "test": "npm -s run-script jshint && npm -s run-script unit",
     "unit": "mocha -R spec",
-    "jshint": "jshint index.js"
+    "jshint": "jshint lib"
   }
 }

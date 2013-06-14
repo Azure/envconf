@@ -18,7 +18,7 @@
 var should = require('should');
 var sinon = require('sinon');
 
-var envconf = require('../index');
+var envconf = require('../lib/index');
 
 describe('Config', function () {
   it('should be creatable by new', function () {
