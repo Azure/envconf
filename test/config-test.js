@@ -280,3 +280,55 @@ describe('Config customization', function () {
     spy.callCount.should.equal(2);
   });
 });
+
+describe('Snapshot and restore', function () {
+  it('should save and restore configuration state', function () {
+    var c = envconf.createConfig();
+    c.configure(function () {
+      c.set('first', 'one');
+      c.set('second', 'two');
+    });
+
+    var ss = c.snapshot();
+    c.set('first', 'changed');
+    c.set('added', 'new value');
+
+    c.restore(ss);
+
+    c.get('first').should.equal('one');
+    c.get('second').should.equal('two');
+    should.not.exist(c.get('added'));
+  });
+
+  it('should save and restore child environments', function () {
+    var c = envconf.createConfig();
+    c.configure('dev', function (dev) {
+      dev.set('devFirst', 'one');
+      dev.configure('devsub', function (devsub) {
+        devsub.set('subsubFirst', 'a sub sub value');
+      });
+    });
+
+    c.configure('prod', function (prod) {
+      prod.set('prodvalue', 'a value');
+    });
+
+    var snapshot = c.snapshot();
+
+    c('dev').set('devFirst', 'changed value');
+    c('prod').configure('addedEnvironment', function (added) {
+      added.set('newEnvValue', 1234);
+    });
+
+    c.restore(snapshot);
+
+    c('dev').get('devFirst').should.equal('one');
+    c('prod').environments.should.not.include('addedEnvironment');
+  });
+
+  it('should fail if trying to restore an invalid snapshot', function () {
+    var c = envconf.createConfig();
+
+    (function () { c.restore([{}, {}]); }).should.throw();
+  });
+});
