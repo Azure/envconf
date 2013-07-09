@@ -72,3 +72,28 @@ c3.configure('production', function (c) {
   c.useSql('realDatabase', 'actualDb');
 });
 ```
+
+Are you making changes to a global configuration in your unit tests, and want
+to ensure you've restored the state after your test? Use a snapshot:
+
+```javascript
+
+var c4 = envconf.createConfig();
+c4.configure(function (c) {
+  c.set('originalValue', 'one');
+});
+
+// set up contents of c4
+
+var snapshot = c4.snapshot();
+
+c4.configure(function (c) {
+  c.set('originalValue', 'two');
+});
+
+c4.restore(snapshot);
+
+c4.get('originalValue').should.equal('one');
+```
+
+Snapshot/restore also saves and restores any child configurations.
