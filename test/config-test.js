@@ -325,4 +325,10 @@ describe('Snapshot and restore', function () {
     c('dev').get('devFirst').should.equal('one');
     c('prod').environments.should.not.include('addedEnvironment');
   });
+
+  it('should fail if trying to restore an invalid snapshot', function () {
+    var c = envconf.createConfig();
+
+    (function () { c.restore([{}, {}]); }).should.throw();
+  });
 });
