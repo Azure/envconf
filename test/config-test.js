@@ -332,3 +332,43 @@ describe('Snapshot and restore', function () {
     (function () { c.restore([{}, {}]); }).should.throw();
   });
 });
+
+describe('Temporary environments', function () {
+  var c;
+  var customizer;
+
+  beforeEach(function () {
+    customizer = sinon.spy();
+    c = envconf.createConfig({customizer: customizer});
+    c.set('parentValue', 'from parent');
+  });
+
+  it('should create a temp environment that looks up to parent', function () {
+    var temp = c.tempConfig();
+    temp.get('parentValue').should.equal('from parent');
+  });
+
+  it('should be independent of parent', function () {
+    var temp = c.tempConfig();
+    temp.set('tempValue', 'from temp');
+    c.has('tempValue').should.be.false;
+  });
+
+  it('should not be referred to from parent', function () {
+    var temp = c.tempConfig();
+    c.environments.length.should.equal(0);
+  });
+
+  it('should be independent of each other', function () {
+    var t1 = c.tempConfig();
+    var t2 = c.tempConfig();
+
+    t2.set('tempValue', 'from t2');
+    should.not.exist(t1.get('tempValue'));
+  });
+
+  it('should be run through customizer', function () {
+    var temp = c.tempConfig();
+    customizer.callCount.should.equal(2);
+  });
+});
