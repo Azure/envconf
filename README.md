@@ -97,3 +97,24 @@ c4.get('originalValue').should.equal('one');
 ```
 
 Snapshot/restore also saves and restores any child configurations.
+
+Similarly, you might want to set up a configuration and then be able
+to throw it away without giving it a name. Easy:
+
+```javascript
+
+var c5 = envconf.createConfiguration();
+c5.configure(function (c) {
+  c.set('originalValue', 'one');
+});
+
+var c6 = envconf.tempConfig();
+c6.set('tempValue', 'temp');
+
+// You can look up values in the temp config or the parent
+c6.get('tempValue').should.equal('temp');
+c6.get('originalValue').should.equal('one');
+
+// But the parent has no record of the temp
+c5.environments.length.should.equal(0);
+```
