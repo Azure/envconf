@@ -372,3 +372,27 @@ describe('Temporary environments', function () {
     customizer.callCount.should.equal(2);
   });
 });
+
+describe('Setting getters', function () {
+  var c;
+
+  beforeEach(function () {
+    c = envconf.createConfig();
+  });
+
+  it('should call getter when retrieving', function () {
+    function getter() { return 'a value'; }
+    var spy = sinon.spy(getter);
+    c.setFunc('setting', spy);
+    c.get('setting').should.equal('a value');
+    spy.callCount.should.equal(1);
+  });
+
+  it('should not be invoked when set using set method', function () {
+    function getter() { return 'a value'; }
+    var spy = sinon.spy(getter);
+    c.set('setting', spy);
+    c.get('setting').should.equal(spy);
+    spy.callCount.should.equal(0);    
+  });
+});
