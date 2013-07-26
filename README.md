@@ -5,8 +5,7 @@ This module makes it easy to use express-style configuration for any application
 It allows your users to define separate configuration environments in code
 and switch between sets of configuration via a single environment variable.
 
-
-Usage:
+## Basic Usage
 
 ```javascript
 
@@ -50,8 +49,28 @@ process.env.MY_LIBRARY_VAR = 'production';
 c.default.get('settingTwo').should.equal('prodValue');
 ```
 
-Do you want to add helper methods for your specific configuration? It's easy
-with a config customizer:
+## Setting Getters
+
+Instead of a setting a simple value, you can instead use the setFunc method to
+provide a function that will run when the value is requested:
+
+```javascript
+var c2 = envconf.createConfig();
+
+c2.configure('development', function (c) {
+  c.setFunc('settingOne', function () { return 'This value came from a function'; });
+});
+
+c2.get('settingOne').should.equal('This value came from a function');
+```
+
+This can be handy if you want to have a default value that you need to derive from
+ambient state.
+
+## Customizing the config object
+
+Do you want to add helper methods for your specific configuration? Or set specific
+values in every configuration? It's easy with a config customizer:
 
 ```javascript
 
@@ -72,6 +91,8 @@ c3.configure('production', function (c) {
   c.useSql('realDatabase', 'actualDb');
 });
 ```
+
+## Saving and Restoring config values
 
 Are you making changes to a global configuration in your unit tests, and want
 to ensure you've restored the state after your test? Use a snapshot:
@@ -97,6 +118,8 @@ c4.get('originalValue').should.equal('one');
 ```
 
 Snapshot/restore also saves and restores any child configurations.
+
+## Temporary Configs
 
 Similarly, you might want to set up a configuration and then be able
 to throw it away without giving it a name. Easy:
