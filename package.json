@@ -13,18 +13,18 @@
   "keywords": ["config", "configuration", "environment"],
   "licenses": [ { "type": "Apache 2.0", "url": "http://www.apache.org/licenses/LICENSE-2.0" } ],
   "devDependencies": {
-    "mocha": "~1.12.0",
-    "should": "~1.2.2",
+    "mocha": "~1",
+    "should": "~3",
     "sinon": "*",
     "jshint": "*"
   },
-  "homepage": "https://github.com/WindowsAzure/envconf",
+  "homepage": "https://github.com/Azure/envconf",
   "repository": {
     "type": "git",
-    "url": "git@github.com:WindowsAzure/envconf.git"
+    "url": "git@github.com:Azure/envconf.git"
   },
   "bugs": {
-    "url": "http://github.com/WindowsAzure/envconf/issues"
+    "url": "http://github.com/Azure/envconf/issues"
   },
   "scripts": {
     "test": "npm -s run-script jshint && npm -s run-script unit",

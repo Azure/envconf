@@ -61,6 +61,33 @@ describe('Config', function () {
     c.get('secondSetting').should.equal(37);
   });
 
+  it('should store settings via object literal', function () {
+    var c = envconf.createConfig();
+    c.configure(function (c) {
+      c.set({
+        settingOne: 'aValue',
+        secondSetting: 37
+      });
+    });
+
+    c.get('settingOne').should.equal('aValue');
+    c.get('secondSetting').should.equal(37);
+  });
+
+  it('should set a function in setting via object literal', function () {
+    var c = envconf.createConfig();
+    var f = sinon.stub().returns('hello');
+
+    c.set({
+      settingOne: 'aValue',
+      settingTwo: f
+    });
+
+    c.get('settingOne').should.equal('aValue');
+    c.get('settingTwo').should.equal('hello');
+    f.callCount.should.equal(1);
+  });
+
   it('should store settings in environments', function () {
     var c = envconf.createConfig();
 
