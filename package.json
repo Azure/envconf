@@ -18,13 +18,13 @@
     "sinon": "*",
     "jshint": "*"
   },
-  "homepage": "https://github.com/WindowsAzure/envconf",
+  "homepage": "https://github.com/Azure/envconf",
   "repository": {
     "type": "git",
-    "url": "git@github.com:WindowsAzure/envconf.git"
+    "url": "git@github.com:Azure/envconf.git"
   },
   "bugs": {
-    "url": "http://github.com/WindowsAzure/envconf/issues"
+    "url": "http://github.com/Azure/envconf/issues"
   },
   "scripts": {
     "test": "npm -s run-script jshint && npm -s run-script unit",
