@@ -61,6 +61,19 @@ describe('Config', function () {
     c.get('secondSetting').should.equal(37);
   });
 
+  it('should store settings via object literal', function () {
+    var c = envconf.createConfig();
+    c.configure(function (c) {
+      c.set({
+        settingOne: 'aValue',
+        secondSetting: 37
+      });
+    });
+
+    c.get('settingOne').should.equal('aValue');
+    c.get('secondSetting').should.equal(37);
+  });
+
   it('should store settings in environments', function () {
     var c = envconf.createConfig();
 
