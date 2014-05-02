@@ -147,7 +147,7 @@ to throw it away without giving it a name. Easy:
 
 ```javascript
 
-var c5 = envconf.createConfiguration();
+var c5 = envconf.createConfig();
 c5.configure(function (c) {
   c.set('originalValue', 'one');
 });

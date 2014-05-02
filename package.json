@@ -6,7 +6,7 @@
     "Rodrigues, Andre <andrerod@microsoft.com>",
     "Tavares, Chris <ctavares@microsoft.com>"
   ],
-  "version": "0.0.4",
+  "version": "1.0.0",
   "description": "a module for express-style programmatic configuration",
   "main": "lib/index.js",
   "tags": ["config", "environment"],
