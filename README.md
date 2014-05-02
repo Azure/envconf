@@ -18,13 +18,19 @@ c.configure('development', function (c) {
 });
 
 c.configure('production', function (c) {
-  c.set('settingTwo', 'prodValue');
+  // You can also pass in an object literal to set a bunch
+  // of values at once
+  c.set({
+    settingTwo: 'prodValue'
+    prodOnly: 'prodSpecific'
+  });
 });
 
 c('development').get('settingOne').should.equal('devValue');
 
 process.env.NODE_ENV = 'production';
 c.default.get('settingTwo').should.equal('prodValue');
+c.default.get('prodOnly').should.equal('prodSpecific');
 ```
 
 The previous code shows picking up the default environment from the NODE_ENV environment variable.
@@ -62,6 +68,21 @@ c2.configure('development', function (c) {
 });
 
 c2.get('settingOne').should.equal('This value came from a function');
+```
+
+or, if you use the object literal version of set, values that are functions
+will be treated as if you called setFunc for that value:
+
+```javascript
+var c2 = envconf.createConfig();
+
+c2.configure('development', function (c) {
+  c.set({
+    settingOne: function () { return 'This value also came from a function'; }
+  });
+});
+
+c2.get('settingOne').should.equal('This value also came from a function');
 ```
 
 This can be handy if you want to have a default value that you need to derive from
@@ -126,7 +147,7 @@ to throw it away without giving it a name. Easy:
 
 ```javascript
 
-var c5 = envconf.createConfiguration();
+var c5 = envconf.createConfig();
 c5.configure(function (c) {
   c.set('originalValue', 'one');
 });

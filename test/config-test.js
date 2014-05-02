@@ -61,6 +61,33 @@ describe('Config', function () {
     c.get('secondSetting').should.equal(37);
   });
 
+  it('should store settings via object literal', function () {
+    var c = envconf.createConfig();
+    c.configure(function (c) {
+      c.set({
+        settingOne: 'aValue',
+        secondSetting: 37
+      });
+    });
+
+    c.get('settingOne').should.equal('aValue');
+    c.get('secondSetting').should.equal(37);
+  });
+
+  it('should set a function in setting via object literal', function () {
+    var c = envconf.createConfig();
+    var f = sinon.stub().returns('hello');
+
+    c.set({
+      settingOne: 'aValue',
+      settingTwo: f
+    });
+
+    c.get('settingOne').should.equal('aValue');
+    c.get('settingTwo').should.equal('hello');
+    f.callCount.should.equal(1);
+  });
+
   it('should store settings in environments', function () {
     var c = envconf.createConfig();
 
@@ -393,6 +420,30 @@ describe('Setting getters', function () {
     var spy = sinon.spy(getter);
     c.set('setting', spy);
     c.get('setting').should.equal(spy);
-    spy.callCount.should.equal(0);    
+    spy.callCount.should.equal(0);
+  });
+
+  it('should be invoked with parameters that are passed on get call', function () {
+    var spy = sinon.spy(function () { return 'a value'; });
+    c.setFunc('setting', spy);
+
+    c.get('setting', 1, 3, 'hello').should.equal('a value');
+    spy.calledWithExactly('setting', 1, 3, 'hello').should.be.true;
+  });
+
+  it('should be invoked with config that get was called on as context', function () {
+    var c2 = c('child');
+
+    var spy = sinon.spy(function (s, n1) { return 'a value for ' + s + ' is ' + n1; });
+    c.setFunc('setting', spy);
+
+    c2.get('setting', 37, 42).should.equal('a value for setting is 37');
+    spy.alwaysCalledOn(c2).should.be.true;
+  });
+
+  it('should be able to request other values from config', function () {
+    c.setFunc('root', function () { return 'root: ' + this.get('child'); });
+    c.set('child', 'child value');
+    c.get('root').should.equal('root: child value');
   });
 });
