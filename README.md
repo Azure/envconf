@@ -111,7 +111,19 @@ c3.configure('test', function (c) {
 c3.configure('production', function (c) {
   c.useSql('realDatabase', 'actualDb');
 });
+
+// Can also customize after creation, customizations
+// will affect any child configs too!
+c3 = envconf.createConfig();
+var prod = c3('prod');
+
+c3.customize(addConfigHelpers);
+
+c3.configure('production', function (c) {
+  c.useSql('realDatabase', 'actualDb');
+});
 ```
+
 
 ## Saving and Restoring config values
 

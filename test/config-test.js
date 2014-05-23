@@ -269,6 +269,10 @@ describe('Config customization', function () {
     config.customValue = ++count;
   }
 
+  function afterCreateCustomizer(config) {
+    config.wasCustomizedAfterCreation = true;
+  }
+
   var spy;
 
   beforeEach(function () {
@@ -305,6 +309,39 @@ describe('Config customization', function () {
     c('dev');
 
     spy.callCount.should.equal(2);
+  });
+
+  it('should customize after creation', function () {
+    var c = envconf.createConfig();
+    c.customize(afterCreateCustomizer);
+
+    c.wasCustomizedAfterCreation.should.be.true;
+  });
+
+  it('should customize existing child environments', function () {
+    var c = envconf.createConfig();
+    var dev = c('dev');
+    var localdev = dev('local');
+
+    c.customize(afterCreateCustomizer);
+
+    dev.wasCustomizedAfterCreation.should.be.true;
+    localdev.wasCustomizedAfterCreation.should.be.true;
+  });
+
+  it('should customize new child environments after customizing', function () {
+    var c = envconf.createConfig();
+    c.customize(afterCreateCustomizer);
+
+    c('dev').wasCustomizedAfterCreation.should.be.true;
+  });
+
+  it('should add customizers instead of replacing', function () {
+    var c = envconf.createConfig({customizer: spy});
+    c.customize(afterCreateCustomizer);
+
+    c('dev').customValue.should.equal(2);
+    c('dev').wasCustomizedAfterCreation.should.be.true;
   });
 });
 
